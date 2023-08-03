@@ -1,81 +1,87 @@
+"use strict";
+
 console.log(1 / 0); // Infinity
 console.log(-1 / 0); // -Infinity
 console.log("not a number" / 2); // NaN, such division is erron
-
 
 const name = "Ilya";
 
 console.log(`hello ${name}`); // hello 1
 
+const agwYear = 2022,
+  ageDima = agwYear - 1994,
+  ageAnna = agwYear - 1996;
 
-const
-      agwYear = 2022,
-      ageDima = agwYear - 1994
-      ageAnna = agwYear - 1996
+console.log(ageDima + ageAnna);
 
+console.log("Hello " + "World"); // Hello World
 
-console.log(ageDima + ageAnna)
+let a = 2;
+a += 5;
 
-console.log('Hello ' + 'World') // Hello World
+console.log(a); // 7
 
-let a = 2
-a +=  5
+let b = 2;
 
-console.log(a) // 7
+console.log(b++); // 2
 
-let b = 2
+console.log(true < false); // false
 
-console.log(b++) // 2
+console.log("Привет10" > 5); // false
+console.log(10 > "5"); // true
 
-console.log(true < false) // false
+console.log(undefined == 0); // false
+console.log(undefined == null); // true
+console.log(null === undefined); // false
+console.log("10" === 10); // false
 
-console.log('Привет10' > 5 ) // false
-console.log(10 > '5') // true
+console.log(10 + 5 * 2); // 20
 
-console.log(undefined == 0 ) // false
-console.log(undefined == null ) // true
-console.log(null === undefined ) // false
-console.log('10' === 10 ) // false
+console.log(25 - 10 - 5); // 10
 
-console.log(10 + 5 * 2) // 20
+let x, y;
 
-console.log(25- 10 - 5) // 10
+x = y = 10 + 5 * 2;
 
-let x, y
+console.log("2" > 1); // true
 
-x = y = 10 + 5 * 2
+let h = 1;
 
-console.log('2' > 1) // true
+h = "100";
 
-let h = 1
+h = Boolean(h);
 
-h = '100'
+console.log(typeof +h); // 2
 
-h = Boolean(h)
+Number();
+String();
+Boolean();
 
-console.log(typeof  +h) // 2
+window.alert("Hello");
 
-Number()
-String()
-Boolean()
+const age = 19;
+age >= 18 ? console.log("You are adult") : console.log("You are child");
+const drink = age >= 18 ? "wine" : "water";
 
-window.alert('Hello')
+console.log(drink);
 
-
-const age = 19
-age >= 18 ? console.log('You are adult') : console.log('You are child')
-const drink = age >= 18 ? 'wine' : 'water'
-
-console.log(drink)
-
-
-let drink2
+let drink2;
 if (age >= 18) {
-  drink2 = 'wine'
+  drink2 = "wine";
 } else {
-  drink2 = 'water'
+  drink2 = "water";
 }
 
-console.log(drink2)
+console.log(drink2);
+console.log(`I like to drink ${age >= 18 ? "wine" : "water"}`);
 
-console.log(`I like to drink ${age >= 18 ? 'wine' : 'water'}`)
+// use strict
+let hesDriversLicense = true;
+const passTest = true;
+
+if (passTest) {
+  hesDriversLicense = true;
+}
+if (hesDriversLicense) {
+  console.log("I can drive");
+}
