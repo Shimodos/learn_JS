@@ -48,4 +48,6 @@ checkWinner(crazyKats, funnyDucks);
 
 crazyKats = calcAverage(44, 23, 71);
 funnyDucks = calcAverage(65, 54, 49);
+
+// console.log(crazyKats, funnyDucks);
 checkWinner(crazyKats, funnyDucks);
