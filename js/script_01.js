@@ -1,61 +1,18 @@
 "use strict";
 
-// function ask(question, yes, no) {
-//   if (confirm(question)) yes();
-//   else no();
-// }
-//
-// // usage: functions showOk, showCancel are passed as arguments to ask
-// ask(
-//   "Do you agree?",
-//   () => alert("You agreed."),
-//   () => alert("You canceled the execution."),
-// );
+// ARRAYS Массивы
 
-let sum = (a, b) => a + b;
+// const arr = [1, 2, 3, 4, 5]
 
-console.log(sum(1, 2)); // 3
-
-const firstName = "John";
-const lastName = "Smith";
-
-function calcAge() {
-  return 2023 - this.birthYear;
-}
-
-const userFirst = {
-  firstName,
-  lastName,
-  birthYear: 1982,
-  calcAge,
+const userObj = {
+  firtsName: "John",
+  age: 30,
 };
 
-const userSecond = {
-  firstName,
-  lastName,
-  birthYear: 1942,
-  calcAge,
-};
-console.log(userFirst.calcAge());
-console.log(userSecond.calcAge());
+console.log(userObj);
 
-// user.sex = "male";
-// console.log(user);
-//
-// delete user.sex;
-// console.log(user);
+const year = 2021,
+  berthYear = 1982;
+const userArr = ["John", 30, 33, year - berthYear];
 
-// user["sex"] = "male";
-// console.log(user);
-//
-// delete user["sex"];
-// console.log(user);
-
-// const propertyName = "newProperty";
-//
-// user[propertyName + " 2"] = "new value";
-// console.log(user);
-
-// const answer = prompt("Enter your name", "John");
-//
-// alert(user[answer]);
+console.log(userArr.at(-1));
