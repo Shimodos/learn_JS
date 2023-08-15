@@ -1,13 +1,24 @@
 "use strict";
 
-let elem = document.querySelector("h1");
+let li = document.querySelectorAll("li");
 
-// console.log(elem.innerHTML);
+// header.style.cssText = `
+// color: red;
+// background-color: yellow;
+// `; // cssText - свойство, которое позволяет задать несколько стилей сразу
 
-// let oldData = elem.innerHTML;
+// header.classList.add("newClass"); // добавляет класс
 
-elem.outerHTML = `<p>Hello World! -tram pam pam</p>`; // замена элемента
+// console.log(header.className); // возвращает строку с классами
+// header.className = "newClass"; // перезаписывает классы
 
-console.log(elem.firstChild); // получение первого дочернего элемента
+// console.log(getComputedStyle(header)); // возвращает стили элемента
 
-elem.firstChild.data = "New Comments"; // изменение текста
+// let styleOfHeader = getComputedStyle(li, "::before");
+// console.log(styleOfHeader);
+
+// console.log(parseInt(styleOfHeader.marginBottom)); // преобразует строку в число
+
+for (let value of li) {
+  value.classList.add("newClass");
+}
