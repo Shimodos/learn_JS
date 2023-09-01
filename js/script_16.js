@@ -7,8 +7,8 @@ console.log(arr1.slice(2, 4)); // ["c", "d"]
 console.log(arr1.slice(-2)); // ["d", "e"]
 const arr2 = arr1.slice(0);
 console.log(arr2); // ["a", "b", "c", "d", "e"]
-
 //Reverse
+
 const arr3 = ["j", "i", "h", "g", "f"];
 console.log(arr3.reverse()); // ["f", "g", "h", "i", "j"]
 

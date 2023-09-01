@@ -51,3 +51,38 @@ const inputTransferAmount = document.querySelector(".form__input--amount");
 const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
+
+// Functions
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = "";
+  movements.forEach(function (value, i) {
+    const type = value > 0 ? "deposit" : "withdrawal";
+    const operation = value > 0 ? "пополнение" : "снятие";
+
+    const html = `
+    <div class="movements__row">
+      <div class="movements__type movements__type--${type}">
+        ${i + 1} ${operation}
+      </div>
+      <div class="movements__date">24/01/2037</div>
+      <div class="movements__value">${value}</div>
+    </div>
+    `;
+    containerMovements.insertAdjacentHTML("afterbegin", html);
+  });
+};
+
+displayMovements(account1.movements);
+
+const uah = [100, 222, 340, 435];
+let usd = [];
+
+//forEach
+uah.forEach(function (value, i) {
+  usd.push((value / 30).toFixed(2));
+});
+console.log(usd);
+
+//map
+const usd2 = uah.map((value) => (value / 30).toFixed(2));
+console.log(usd2);
