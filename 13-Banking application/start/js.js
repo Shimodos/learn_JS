@@ -74,15 +74,17 @@ const displayMovements = function (movements) {
 
 displayMovements(account1.movements);
 
-const uah = [100, 222, 340, 435];
-let usd = [];
+// Login
 
-//forEach
-uah.forEach(function (value, i) {
-  usd.push((value / 30).toFixed(2));
-});
-console.log(usd);
+function createLogIn(accs) {
+  accs.forEach((acc) => {
+    acc.login = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map((value) => value[0])
+      .join("");
+  });
+}
 
-//map
-const usd2 = uah.map((value) => (value / 30).toFixed(2));
-console.log(usd2);
+createLogIn(accounts);
+console.log(accounts);
