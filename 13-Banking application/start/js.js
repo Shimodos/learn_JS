@@ -65,7 +65,7 @@ const displayMovements = function (movements) {
         ${i + 1} ${operation}
       </div>
       <div class="movements__date">24/01/2037</div>
-      <div class="movements__value">${value}</div>
+      <div class="movements__value">${value} ₴</div>
     </div>
     `;
     containerMovements.insertAdjacentHTML("afterbegin", html);
@@ -75,7 +75,6 @@ const displayMovements = function (movements) {
 displayMovements(account1.movements);
 
 // Login
-
 function createLogIn(accs) {
   accs.forEach((acc) => {
     acc.login = acc.owner
@@ -88,3 +87,11 @@ function createLogIn(accs) {
 
 createLogIn(accounts);
 console.log(accounts);
+
+// All balance
+const calcPrintBalance = function (movements) {
+  const balance = movements.reduce((acc, value) => acc + value, 0);
+  labelBalance.textContent = `${balance} ₴`;
+};
+
+calcPrintBalance(account1.movements);
