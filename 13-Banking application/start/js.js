@@ -72,9 +72,7 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
-
-// Login
+// Login function
 function createLogIn(accs) {
   accs.forEach((acc) => {
     acc.login = acc.owner
@@ -88,10 +86,61 @@ function createLogIn(accs) {
 createLogIn(accounts);
 console.log(accounts);
 
-// All balance
+// All balance of all accounts
 const calcPrintBalance = function (movements) {
   const balance = movements.reduce((acc, value) => acc + value, 0);
   labelBalance.textContent = `${balance} ₴`;
 };
 
 calcPrintBalance(account1.movements);
+
+// Summary of incomes, out, interest
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter((move) => move > 0)
+    .reduce((acc, move) => acc + move, 0);
+  labelSumIn.textContent = `${incomes} ₴`;
+  // console.log(incomes);
+
+  const out = movements
+    .filter((value) => value < 0)
+    .reduce((acc, value) => acc + value, 0);
+  labelSumOut.textContent = `${Math.abs(out)} ₴`; // Math.abs() - возвращает абсолютное значение числа
+  // console.log(out);
+
+  labelSumInterest.textContent = `${incomes + out} ₴`;
+};
+
+calcDisplaySummary(account1.movements);
+
+// Account login
+
+let currentAccount;
+btnLogin.addEventListener("click", function (e) {
+  e.preventDefault();
+  currentAccount = accounts.find(
+    (acc) => acc.login === inputLoginUsername.value,
+  );
+  console.log(currentAccount);
+  if (currentAccount && currentAccount.pin === Number(inputLoginPin.value)) {
+    // Display UI and message
+    labelWelcome.textContent = `Добро пожаловать, ${
+      currentAccount.owner.split(" ")[0]
+    }`;
+    containerApp.style.opacity = 100;
+
+    // Clear input fields
+    inputLoginUsername.value = inputLoginPin.value = "";
+    inputLoginPin.blur();
+
+    // Display movements
+    displayMovements(currentAccount.movements);
+
+    // Display balance
+    calcPrintBalance(currentAccount.movements);
+
+    // Display summary
+    calcDisplaySummary(currentAccount.movements);
+  }
+  console.log("LOGIN");
+});

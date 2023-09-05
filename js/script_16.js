@@ -46,3 +46,12 @@ const set = new Set(map);
 set.forEach(function (value, key, set) {
   console.log(key, value, set);
 });
+
+//find() - возвращает первый элемент массива, который удовлетворяет условию
+
+const arr7 = [10, 5, -3, -5, 23, -7];
+
+const firstNegative = arr7.find((value) => {
+  return value < 0;
+});
+console.log(firstNegative); // -3
