@@ -245,3 +245,20 @@ btnSort.addEventListener("click", function (e) {
   displayMovements(currentAccount.movements, !sorted);
   sorted = !sorted;
 });
+
+// fill()
+
+// const arr = [1, 2, 3, 4, 5, 6, 6];
+// arr.fill("1", 2, 4); // fill() - заполняет все элементы массива от начального до конечного индексов одним значением
+// console.log(arr);
+
+// Array.from()
+
+const str = "1234";
+console.log(Array.from(str, (val, i) => "Num" + val)); // Array.from() - создаёт новый экземпляр Array из массивоподобного или итерируемого объекта
+
+labelBalance.addEventListener("click", function () {
+  Array.from(document.querySelectorAll(".movements__value"), function (val, i) {
+    return (val.innerHTML = val.textContent.replace("₴", ""));
+  });
+});
