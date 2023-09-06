@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -23,10 +23,10 @@
           class="login__input login__input--user"
         />
         <input
-          type="text"
-          placeholder="PIN"
+          type="password"
           maxlength="4"
           class="login__input login__input--pin"
+          autocomplete="off"
         />
         <button class="login__btn">&rarr;</button>
       </form>
@@ -96,6 +96,7 @@
             type="password"
             maxlength="6"
             class="form__input form__input--pin"
+            autocomplete="off"
           />
           <button class="form__btn form__btn--close">&rarr;</button>
           <label class="form__label">Пользователь</label>

@@ -53,9 +53,11 @@ const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
 // Functions
-const displayMovements = function (movements) {
+const displayMovements = (movements, sort = false) => {
   containerMovements.innerHTML = "";
-  movements.forEach(function (value, i) {
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements; // slice() - возвращает новый массив, содержащий копию части исходного массива
+  movs.forEach(function (value, i) {
     const type = value > 0 ? "deposit" : "withdrawal";
     const operation = value > 0 ? "пополнение" : "снятие";
 
@@ -84,18 +86,17 @@ function createLogIn(accs) {
 }
 
 createLogIn(accounts);
-console.log(accounts);
 
 // All balance of all accounts
-const calcPrintBalance = function (movements) {
-  const balance = movements.reduce((acc, value) => acc + value, 0);
-  labelBalance.textContent = `${balance} ₴`;
+const calcPrintBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, value) => acc + value, 0);
+  labelBalance.textContent = `${acc.balance} ₴`;
 };
 
-calcPrintBalance(account1.movements);
+// calcPrintBalance(account1.movements);
 
 // Summary of incomes, out, interest
-const calcDisplaySummary = function (movements) {
+function calcDisplaySummary(movements) {
   const incomes = movements
     .filter((move) => move > 0)
     .reduce((acc, move) => acc + move, 0);
@@ -109,9 +110,18 @@ const calcDisplaySummary = function (movements) {
   // console.log(out);
 
   labelSumInterest.textContent = `${incomes + out} ₴`;
-};
+}
 
-calcDisplaySummary(account1.movements);
+// calcDisplaySummary(account1.movements);
+
+const updateUI = function (acc) {
+  // Display movements
+  displayMovements(acc.movements);
+  // Display balance
+  calcPrintBalance(acc);
+  // Display summary
+  calcDisplaySummary(acc.movements);
+};
 
 // Account login
 
@@ -121,7 +131,6 @@ btnLogin.addEventListener("click", function (e) {
   currentAccount = accounts.find(
     (acc) => acc.login === inputLoginUsername.value,
   );
-  console.log(currentAccount);
   if (currentAccount && currentAccount.pin === Number(inputLoginPin.value)) {
     // Display UI and message
     labelWelcome.textContent = `Добро пожаловать, ${
@@ -133,14 +142,106 @@ btnLogin.addEventListener("click", function (e) {
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
 
-    // Display movements
-    displayMovements(currentAccount.movements);
-
-    // Display balance
-    calcPrintBalance(currentAccount.movements);
-
-    // Display summary
-    calcDisplaySummary(currentAccount.movements);
+    // Update UI
+    updateUI(currentAccount);
   }
-  console.log("LOGIN");
+});
+
+// Transfer money
+
+btnTransfer.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value); // Number() - преобразует строку в число
+  const receiverAcc = accounts.find(
+    (acc) => acc.login === inputTransferTo.value,
+  );
+  inputTransferAmount.value = inputTransferTo.value = "";
+
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    currentAccount.balance >= amount &&
+    receiverAcc.login !== currentAccount.login // ?. - optional chaining
+  ) {
+    // Doing transfer
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+});
+
+// Close account
+
+btnClose.addEventListener("click", function (e) {
+  e.preventDefault();
+  if (
+    inputCloseUsername.value === currentAccount.login &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      (acc) => acc.login === currentAccount.login,
+    );
+
+    // Delete account
+    accounts.splice(index, 1);
+
+    // Hide UI
+    containerApp.style.opacity = 0;
+  }
+  inputCloseUsername.value = inputClosePin.value = "";
+});
+
+// Deposit money
+
+btnLoan.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (
+    amount > 0 &&
+    currentAccount.movements.some((mov) => mov >= amount * 0.1) // some() - возвращает true, если хотя бы один элемент массива удовлетворяет условию
+  ) {
+    // Add movement
+    currentAccount.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = "";
+});
+
+// All movements sorting
+
+const accMov = accounts.map((acc) => acc.movements);
+console.log(accMov);
+
+const allMoves = accMov.flat(); // flat() - возвращает новый массив, в котором все элементы вложенных подмассивов были рекурсивно "подняты" на указанный уровень
+console.log(allMoves);
+
+const allBalance = allMoves.reduce((acc, mov) => acc + mov, 0);
+console.log(allBalance);
+
+// short version of all movements sorting
+const overalBalance = accounts
+  .map((acc) => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overalBalance);
+
+// Sorting movements
+
+// const arr = ["a", "d", "b", "c", "e"];
+// console.log(arr);
+// console.log(arr.sort()); // sort() - сортирует элементы массива на месте и возвращает отсортированный массив
+
+// console.log(
+//   account1.movements.sort((a, b) => a - b), // sort() - сортирует элементы массива на месте и возвращает отсортированный массив
+// );
+
+let sorted = false;
+btnSort.addEventListener("click", function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
