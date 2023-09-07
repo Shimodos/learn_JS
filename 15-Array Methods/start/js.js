@@ -29,3 +29,63 @@ const dogs = [
 
 
 */
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ["Anna", "Viktor"] },
+  { weight: 8, curFood: 200, owners: ["Masha"] },
+  { weight: 13, curFood: 275, owners: ["Marina", "Ivan"] },
+  { weight: 32, curFood: 340, owners: ["Dima"] },
+];
+
+// 1)
+dogs.forEach((dog) => {
+  dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28); //trunc - округляет до целого числа
+  console.log(dog.recommendedFood);
+}); // добавляем новое свойство в массив dogs
+console.log(dogs);
+
+// 2)
+const dogMarina = dogs.find((dog) => dog.owners.includes("Marina")); // includes - проверяет есть ли в массиве Marina, find - ищет в массиве
+
+console.log(
+  dogMarina.curFood > dogMarina.recommendedFood ? "Переедает" : "Недоедает",
+);
+
+// 3)
+const ownersEatTooMuch = dogs
+  .filter((dog) => dog.curFood > dog.recommendedFood) // filter - фильтрует массив
+  .flatMap((dog) => dog.owners); // flatMap - собирает массив в один
+
+const ownersEatTooLittle = dogs
+  .filter((dog) => dog.curFood < dog.recommendedFood)
+  .flatMap((dog) => dog.owners);
+
+console.log("Передает", ownersEatTooMuch);
+console.log("Недоедает", ownersEatTooLittle);
+
+// 4)
+console.log(
+  `Собаки, ${ownersEatTooMuch.join(
+    " и ",
+  )} едят слишком много! собаки ${ownersEatTooLittle.join()} едят слишком мало!`, // join - соединяет массив в строку
+);
+
+// 5)
+console.log(dogs.some((dog) => dog.curFood === dog.recommendedFood)); // some - проверяет есть ли в массиве хоть один элемент который соответствует условию
+
+// 6)
+const checkEatingOk = (dog) =>
+  dog.curFood > dog.recommendedFood * 0.9 &&
+  dog.curFood < dog.recommendedFood * 1.1;
+
+console.log(dogs.some(checkEatingOk)); // true - есть собака которая питается правильно (В пределах 10%)
+
+// 7)
+const eatingOk = dogs.filter(checkEatingOk);
+console.log(eatingOk); // 0: {weight: 22, curFood: 250, owners: Array(2), recommendedFood: 284}
+
+// 8)
+const dogsSorted = dogs
+  .slice()
+  .sort((a, b) => a.recommendedFood - b.recommendedFood);
+console.log(dogsSorted); // slice - создает копию массива, sort - сортирует массив
