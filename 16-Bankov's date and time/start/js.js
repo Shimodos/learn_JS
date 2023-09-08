@@ -101,20 +101,32 @@ const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
 // Вывод на страницу всех приходов и уходов
-function displayMovements(movements, sort = false) {
+function displayMovements(acc, sort = false) {
   containerMovements.innerHTML = "";
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   movs.forEach(function (value, i) {
     const type = value > 0 ? "deposit" : "withdrawal";
     const typeMessage = value > 0 ? "внесение" : "снятие";
+
+    const date = new Date(acc.movementsDates[i]);
+
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const hour = `${date.getHours()}`.padStart(2, 0);
+    const min = `${date.getMinutes()}`.padStart(2, 0);
+    const displayData = `${day}/${month}/${year} ${hour}:${min}`;
+
     const html = `
     <div class="movements__row">
           <div class="movements__type movements__type--${type}">
             ${i + 1} ${typeMessage}
           </div>
-          <div class="movements__date">24/01/2037</div>
+          <div class="movements__date">${displayData}</div>
           <div class="movements__value">${value}₽</div>
         </div>
     `;
@@ -162,7 +174,7 @@ function calcDisplaySum(movements) {
 
 //Обновление интерфейса сайта
 function updateUi(acc) {
-  displayMovements(acc.movements);
+  displayMovements(acc);
   calcPrintBalance(acc);
   calcDisplaySum(acc.movements);
 }
@@ -180,6 +192,14 @@ btnLogin.addEventListener("click", function (e) {
     containerApp.style.opacity = 100;
 
     inputLoginPin.value = inputLoginUsername.value = "";
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    const day = `${now.getDate()}`.padStart(2, 0);
+    const hour = `${now.getHours()}`.padStart(2, 0);
+    const min = `${now.getMinutes()}`.padStart(2, 0);
+    labelDate.textContent = `${day}/${month}/${year} ${hour}:${min}`;
 
     console.log("Pin ok");
     updateUi(currentAccount);
@@ -202,6 +222,7 @@ btnTransfer.addEventListener("click", function (e) {
   ) {
     currentAccount.movements.push(-amount);
     reciveAcc.movements.push(amount);
+    currentAccount.movementsDates.push(new Date().toISOString());
     updateUi(currentAccount);
     inputTransferTo.value = inputTransferAmount.value = "";
   }
@@ -231,6 +252,7 @@ btnLoan.addEventListener("click", function (e) {
   const amount = Number(inputLoanAmount.value);
   if (amount > 0) {
     currentAccount.movements.push(amount);
+    currentAccount.movementsDates.push(new Date().toISOString());
     updateUi(currentAccount);
   }
   inputLoanAmount.value = "";
@@ -257,7 +279,7 @@ const overalBalance = accounts
 let sorted = false;
 btnSort.addEventListener("click", function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
 
