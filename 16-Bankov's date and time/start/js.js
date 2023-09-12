@@ -196,6 +196,27 @@ function calcDisplaySum(movements) {
   labelSumInterest.textContent = `${incomes + out}₽`;
 }
 
+// Время для выхода из аккаунта
+function startLogOutTimer() {
+  let time = 600;
+
+  function tick() {
+    const min = `${Math.trunc(time / 60)}`.padStart(2, 0); // Math.trunc - отбрасывает дробную часть
+    const sec = `${time % 60}`.padStart(2, 0); // time % 60 - остаток от деления на 60
+    labelTimer.textContent = min + ":" + sec;
+
+    if (time === 0) {
+      clearInterval(timer);
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = "Войдите для начала работы";
+    }
+    time--;
+  }
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+}
+
 //Обновление интерфейса сайта
 function updateUi(acc) {
   displayMovements(acc);
@@ -205,6 +226,7 @@ function updateUi(acc) {
 
 //Кнопка входа в аккаунт
 let currentAccount;
+let timer;
 btnLogin.addEventListener("click", function (e) {
   e.preventDefault();
   console.log("Login");
@@ -225,7 +247,8 @@ btnLogin.addEventListener("click", function (e) {
     const min = `${now.getMinutes()}`.padStart(2, 0);
     labelDate.textContent = `${day}/${month}/${year} ${hour}:${min}`;
 
-    console.log("Pin ok");
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
     updateUi(currentAccount);
   }
 });
@@ -246,7 +269,14 @@ btnTransfer.addEventListener("click", function (e) {
   ) {
     currentAccount.movements.push(-amount);
     reciveAcc.movements.push(amount);
+
+    // Добавление даты перевода
     currentAccount.movementsDates.push(new Date().toISOString());
+
+    // Обновление таймера
+    clearInterval(timer);
+    timer = startLogOutTimer();
+
     updateUi(currentAccount);
     inputTransferTo.value = inputTransferAmount.value = "";
   }
@@ -277,6 +307,11 @@ btnLoan.addEventListener("click", function (e) {
   if (amount > 0) {
     currentAccount.movements.push(amount);
     currentAccount.movementsDates.push(new Date().toISOString());
+
+    // Обновление таймера
+    clearInterval(timer);
+    timer = startLogOutTimer();
+
     updateUi(currentAccount);
   }
   inputLoanAmount.value = "";
@@ -315,13 +350,30 @@ labelBalance.addEventListener("click", function () {
 });
 
 // Дата и время
-const num = 4323534545;
-const locale = navigator.language;
-const options = {
-  style: "currency",
-  unit: "celsius",
-  currency: "UAH",
-};
+// const num = 4323534545;
+// const locale = navigator.language;
+// const options = {
+//   style: "currency",
+//   unit: "celsius",
+//   currency: "UAH",
+// };
+//
+// const uk = Intl.NumberFormat(locale, options).format(num);
+// console.log(uk);
 
-const uk = Intl.NumberFormat(locale, options).format(num);
-console.log(uk);
+// const timer1 = setTimeout(
+//   function (word1, word2) {
+//     console.log(`${word1} ${word2}`);
+//   },
+//   3000,
+//   "Hello",
+//   "World",
+// );
+//
+// // setInterval(function () {
+// //   console.log(new Date());
+// // }, 1000);
+//
+// if (true) {
+//   clearTimeout(timer1);
+// }
