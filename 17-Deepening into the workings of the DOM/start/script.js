@@ -64,6 +64,31 @@ document.querySelector(".nav__links").addEventListener("click", function (e) {
   }
 });
 
+// Tabbed component
+const tabs = document.querySelectorAll(".operations__tab");
+const tabsContainer = document.querySelector(".operations__tab-container");
+const tabsContent = document.querySelectorAll(".operations__content");
+
+tabsContainer.addEventListener("click", function (e) {
+  e.preventDefault();
+  const clicked = e.target.closest(".operations__tab"); // closest - ищет ближайший родительский элемент с указанным селектором
+  console.log(clicked);
+
+  // Guard clause
+  if (!clicked) return;
+
+  // Remove active classes
+  tabs.forEach((tab) => tab.classList.remove("operations__tab--active"));
+  tabsContent.forEach((c) => c.classList.remove("operations__content--active"));
+
+  // Active tab
+  clicked.classList.add("operations__tab--active");
+
+  // Activate content area
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`) // dataset - получает все data атрибуты
+    .classList.add("operations__content--active");
+});
 // const h1 = document.querySelector("h1");
 
 // function alertH1(e) {
