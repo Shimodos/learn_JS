@@ -89,6 +89,26 @@ tabsContainer.addEventListener("click", function (e) {
     .querySelector(`.operations__content--${clicked.dataset.tab}`) // dataset - получает все data атрибуты
     .classList.add("operations__content--active");
 });
+
+// Menu fade animation
+
+function hover(e, opacity) {
+  if (e.target.classList.contains("nav__link")) {
+    const link = e.target;
+    const siblings = link.closest(".nav").querySelectorAll(".nav__link"); // closest - ищет ближайший родительский элемент с указанным селектором
+    const logo = link.closest(".nav").querySelector(".nav__logo");
+
+    siblings.forEach((el) => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+}
+
+const nav = document.querySelector(".nav");
+nav.addEventListener("mouseover", hover.bind(0.5));
+nav.addEventListener("mouseout", hover.bind(1));
+
 // const h1 = document.querySelector("h1");
 
 // function alertH1(e) {
