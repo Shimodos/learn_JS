@@ -109,6 +109,40 @@ const nav = document.querySelector(".nav");
 nav.addEventListener("mouseover", hover.bind(0.5));
 nav.addEventListener("mouseout", hover.bind(1));
 
+// Sticky navigation - прилипающая навигация
+
+// старый способ
+const navContainer = document.querySelector(".nav");
+// const coord = section1.getBoundingClientRect();
+// console.log(coord);
+// console.log(window.pageXOffset, window.pageYOffset);
+//
+// window.addEventListener("scroll", (e) => {
+//   console.log(window.scrollY);
+//   if (window.scrollY > coord.top) {
+//     navContainer.classList.add("sticky");
+//   } else {
+//     navContainer.classList.remove("sticky");
+//   }
+// });
+
+// новый способ
+const header = document.querySelector(".header");
+function callBack(entries, observer) {
+  if (!entries[0].isIntersecting) {
+    navContainer.classList.add("sticky");
+  } else {
+    navContainer.classList.remove("sticky");
+  }
+}
+const options = {
+  threshold: 0, // 0 - 1
+  rootMargin: "-400px",
+};
+
+const observer = new IntersectionObserver(callBack, options);
+observer.observe(header);
+
 // const h1 = document.querySelector("h1");
 
 // function alertH1(e) {
