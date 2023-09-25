@@ -143,40 +143,79 @@ const options = {
 const observer = new IntersectionObserver(callBack, options);
 observer.observe(header);
 
-// const h1 = document.querySelector("h1");
-
-// function alertH1(e) {
-//   alert("Hello");
-//   // h1.removeEventListener("mouseenter", alertH1); // удаляет обработчик события
+// // Reveal sections
+// const allSections = document.querySelectorAll(".section");
+//
+// function revealSection(entries, observer) {
+//   const [entry] = entries; // деструктуризация массива
+//   if (!entry.isIntersecting) return; // если элемент не пересекается с видимой частью экрана, то ничего не делаем
+//   entry.target.classList.remove("section--hidden");
+//   observer.unobserve(entry.target); // останавливает наблюдение за элементом
 // }
-// h1.addEventListener("mouseenter", alertH1); // добавляет обработчик события
 //
-// setTimeout(() => h1.removeEventListener("mouseenter", alertH1), 3000); // удаляет обработчик события через 3 секунды
+// const sectionObserver = new IntersectionObserver(revealSection, {
+//   threshold: 0.15,
+// });
+//
+// allSections.forEach((section) => {
+//   sectionObserver.observe(section);
+//   section.classList.add("section--hidden");
+// });
 
-// const randomInt = (min, max) =>
-//   Math.floor(Math.random() * (max - min + 1) + min);
+// Lazy loading images
+const imgTargets = document.querySelectorAll("img[data-src]");
+console.log(imgTargets);
 
-// Работа с событиями на родителе и потомках (всплытие и погружение)
-// const randomColor = () =>
-//   `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`; // создает рандомный цвет
-//
-// const nav = document.querySelector(".nav"),
-//   navLinks = document.querySelector(".nav__links"),
-//   navLink = document.querySelector(".nav__link");
-//
-// nav.addEventListener("click", function (e) {
-//   this.style.backgroundColor = randomColor(); // this - это элемент на котором произошло событие
-//   console.log("LINK", e.target, e.currentTarget === this);
-//   // e.stopPropagation(); // останавливает всплытие события
-// });
-//
-// navLinks.addEventListener("click", function (e) {
-//   this.style.backgroundColor = randomColor(); // this - это элемент на котором произошло событие
-//
-//   // e.stopPropagation(); // останавливает всплытие события
-// });
-//
-// navLink.addEventListener("click", function (e) {
-//   this.style.backgroundColor = randomColor(); // this - это элемент на котором произошло событие
-//   e.stopPropagation(); // останавливает всплытие события
-// });
+function loadImg(entries, observer) {
+  const [entry] = entries; // деструктуризация массива
+  if (!entry.isIntersecting) return; // если элемент не пересекается с видимой частью экрана, то ничего не делаем
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener("load", function () {
+    entry.target.classList.remove("lazy-img");
+  });
+  observer.unobserve(entry.target); // останавливает наблюдение за элементом
+}
+const imgObserver = new IntersectionObserver(loadImg, { threshold: 0.15 });
+
+imgTargets.forEach((img) => imgObserver.observe(img)); // наблюдает за всеми картинками
+
+// Slider
+const slides = document.querySelectorAll(".slide");
+const slider = document.querySelector(".slider");
+const btnLeft = document.querySelector(".slider__btn--left");
+const btnRight = document.querySelector(".slider__btn--right");
+
+let curSlide = 0;
+const maxSlide = slides.length;
+
+// slider.style.scale = 0.5;
+// slider.style.overflow = "visible";
+
+function goToSlide(slide) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`),
+  );
+}
+
+goToSlide(0);
+
+function nextSlide() {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  goToSlide(curSlide);
+}
+
+function prevSlide() {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+  goToSlide(curSlide);
+}
+
+btnRight.addEventListener("click", nextSlide);
+btnLeft.addEventListener("click", prevSlide);
