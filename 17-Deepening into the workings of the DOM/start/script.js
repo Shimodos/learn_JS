@@ -184,9 +184,21 @@ const slides = document.querySelectorAll(".slide");
 const slider = document.querySelector(".slider");
 const btnLeft = document.querySelector(".slider__btn--left");
 const btnRight = document.querySelector(".slider__btn--right");
+const dotsContainer = document.querySelector(".dots");
 
 let curSlide = 0;
 const maxSlide = slides.length;
+
+const createDots = function () {
+  slides.forEach(function (_, i) {
+    dotsContainer.insertAdjacentHTML(
+      "beforeend",
+      `<button class="dots__dot" data-slide="${i}"></button>`,
+    );
+  });
+};
+
+createDots();
 
 // slider.style.scale = 0.5;
 // slider.style.overflow = "visible";
@@ -197,6 +209,16 @@ function goToSlide(slide) {
   );
 }
 
+const activateDot = function (slide) {
+  document
+    .querySelectorAll(".dots__dot")
+    .forEach((dot) => dot.classList.remove("dots__dot--active"));
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"]`)
+    .classList.add("dots__dot--active");
+};
+
+activateDot(0);
 goToSlide(0);
 
 function nextSlide() {
@@ -206,6 +228,7 @@ function nextSlide() {
     curSlide++;
   }
   goToSlide(curSlide);
+  activateDot(curSlide);
 }
 
 function prevSlide() {
@@ -215,7 +238,29 @@ function prevSlide() {
     curSlide--;
   }
   goToSlide(curSlide);
+  activateDot(curSlide);
 }
 
 btnRight.addEventListener("click", nextSlide);
 btnLeft.addEventListener("click", prevSlide);
+
+// Слайдер с клавиатуры
+document.addEventListener("keydown", function (e) {
+  if (e.key === "ArrowLeft") prevSlide(); // e.key - клавиша
+  if (e.key === "ArrowRight") nextSlide();
+});
+
+// Слайдер с точками
+dotsContainer.addEventListener("click", function (e) {
+  if (e.target.classList.contains("dots__dot")) {
+    const slide = e.target.dataset.slide;
+    goToSlide(slide);
+    activateDot(slide);
+  }
+});
+
+// DOM Traversing
+
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("HTML parsed and DOM tree built!");
+});
