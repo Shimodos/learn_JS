@@ -11,3 +11,24 @@
 Авто№2 - "Skoda", скорость 105км\ч
 
 */
+
+function Car(brand, speed) {
+  this.brand = brand;
+  this.speed = speed;
+  this.accelerate = function () {
+    this.speed += 10;
+    console.log(`${this.brand} speed ${this.speed}`);
+  };
+  this.decelerate = function () {
+    this.speed -= 5;
+    console.log(`${this.brand} brake ${this.speed}`);
+  };
+}
+
+const car1 = new Car("Lada", 170);
+const car2 = new Car("Skoda", 105);
+
+car1.accelerate();
+car1.decelerate();
+car2.accelerate();
+car2.decelerate();
