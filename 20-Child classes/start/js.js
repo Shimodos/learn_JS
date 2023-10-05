@@ -24,3 +24,47 @@ Car.prototype.break = function () {
 };
 
 */
+
+const Car = function (mark, speed) {
+  this.mark = mark;
+  this.speed = speed;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`${this.mark} едедет со скоростью ${this.speed} км\ч`);
+};
+
+Car.prototype.break = function () {
+  this.speed -= 5;
+  console.log(`${this.mark} едедет со скоростью ${this.speed} км\ч`);
+};
+
+// 1.Используй функцию конструктор чтобы создать электор автомобиль(ElectroCar), который будет дочерним классом автомобиля. Помимо свойств марки(mark) и скорости(speed), у дочернего класса электро автомобиля, создайте свойство уровня заряда батареи(charge).
+const ElectroCar = function (mark, speed, charge) {
+  Car.call(this, mark, speed);
+  this.charge = charge;
+};
+
+ElectroCar.prototype = Object.create(Car.prototype);
+
+ElectroCar.prototype.constructor = ElectroCar;
+
+ElectroCar.prototype.chargeUp = function (chargeTo) {
+  this.charge = chargeTo;
+};
+
+ElectroCar.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge -= 3;
+  console.log(
+    `${this.mark} едедет со скоростью ${this.speed} км\ч, с уровнем заряда ${this.charge}%`,
+  );
+};
+
+const tesla = new ElectroCar("Tesla", 100, 70);
+
+tesla.chargeUp(80);
+tesla.accelerate();
+tesla.break();
+console.log(tesla);
