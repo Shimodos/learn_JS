@@ -2,11 +2,12 @@
 
 // Публичные и приватные поля классов
 class Account {
-  _movements = []; // Public field (instance property)
+  #movements = []; // Public field (instance property)
+  #pin; // Private field (instance property)
   constructor(name, currency, pin) {
     this.name = name;
     this.currency = currency;
-    this._pin = pin; // Private field (instance property)
+    this.#pin = pin; // Private field (instance property)
     console.log(`Thanks for opening an account, ${name}!`);
   }
   seyHello() {
@@ -16,19 +17,19 @@ class Account {
     this._pin = newPin;
   }
   deposit(val) {
-    this._movements.push(val);
+    this.#movements.push(val);
+    return this;
   }
   withdraw(val) {
     this.deposit(-val);
+    return this;
   }
   getMovements() {
-    return this._movements;
+    console.log(this.#movements);
   }
 }
 
 const account1 = new Account("Jonas", "EUR", 1111);
 console.log(account1);
 
-account1.deposit(1000);
-account1.withdraw(500);
-console.log(account1.getMovements());
+account1.deposit(1000).deposit(1000).withdraw(500).withdraw(500).getMovements(); // chaining methods цепочка методов
