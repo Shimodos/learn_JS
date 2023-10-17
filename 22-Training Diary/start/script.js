@@ -23,10 +23,46 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
-// let map;
-// let mapEvent;
+class Workout {
+  date = new Date();
+  id = (Date.now() + "").slice(-10);
+  constructor(coords, distance, duration) {
+    this.coords = coords; // [lat, lng]
+    this.distance = distance; // in km
+    this.duration = duration; // in min
+  }
+}
+
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calcPace(); // Вызов метода в конструкторе
+  }
+
+  calcPace() {
+    // min/km
+    this.pace = this.duration / this.distance;
+    return this.pace;
+  }
+}
+
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elevationGain) {
+    super(coords, distance, duration);
+    this.elevationGain = elevationGain;
+    this.calcSpeed(); // Вызов метода в конструкторе
+  }
+
+  calcSpeed() {
+    // km/h
+    this.speed = this.distance / (this.duration / 60);
+    return this.speed;
+  }
+}
 
 class App {
+  _workouts = [];
   _map;
   _mapEvent;
 
@@ -56,7 +92,6 @@ class App {
     const { longitude } = position.coords;
     const coords = [latitude, longitude];
 
-    console.log(this);
     this._map = L.map("map").setView(coords, 13);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -83,14 +118,58 @@ class App {
   // Создание новой тренировки
   _newWorkout(e) {
     e.preventDefault();
-    inputDistance.value =
-      inputDuration.value =
-      inputCadence.value =
-      inputElevation.value =
-        "";
-    const { lat, lng } = this._mapEvent.latlng;
 
-    L.marker([lat, lng], { draggable: true })
+    const validInputs = (...inputs) =>
+      inputs.every((inp) => Number.isFinite(inp));
+    const allPositiv = (...inputs) => inputs.every((inp) => inp > 0);
+
+    // Полуение данных из формы
+    const type = inputType.value;
+    const distance = +inputDistance.value;
+    const duration = +inputDuration.value;
+    const { lat, lng } = this._mapEvent.latlng;
+    let workouts;
+
+    if (type === "running") {
+      const cadence = +inputCadence.value;
+      // Проверка данных на валидность
+      if (
+        !validInputs(distance, duration, cadence) ||
+        !allPositiv(distance, duration, cadence)
+      ) {
+        return alert("Input positive number");
+      }
+      workouts = new Running([lat, lng], distance, duration, cadence);
+    }
+
+    if (type === "cycling") {
+      const elevation = +inputElevation.value;
+      // Проверка данных на валидность
+      if (
+        !validInputs(distance, duration, elevation) ||
+        !allPositiv(distance, duration)
+      ) {
+        return alert("Input positive number");
+      }
+      workouts = new Cycling([lat, lng], distance, duration, duration);
+    }
+
+    this._workouts.push(workouts);
+    console.log(this._workouts);
+
+    // Проверка данных на валидность
+
+    // Если данные валидны, то создаем объект тренировки бега
+
+    // Если данные валидны, то создаем объект тренировки велосипеда
+
+    // Добавляем новую тренировку в массив тренировок
+
+    // Рендер маркера тренировку на карте
+    this.renderWorkoutMarker(workouts);
+  }
+  renderWorkoutMarker(workout) {
+    L.marker(workout.coords, { draggable: true })
       .addTo(this._map)
       .bindPopup(
         L.popup({
@@ -101,9 +180,19 @@ class App {
           className: "mark-popup",
         }),
       )
-      .setPopupContent("View Point")
+      .setPopupContent("workout.distance")
       .openPopup();
   }
+
+  // Очистка поля ввода и скрытие формы
+
+  // inputDistance.value =
+  //   inputDuration.value =
+  //   inputCadence.value =
+  //   inputElevation.value =
+  //     "";
+
+  //  Рендер списка тренировок
 }
 
 const app = new App();
