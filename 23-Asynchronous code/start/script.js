@@ -4,17 +4,37 @@ const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
 
 ///////////////////////////////////////
+function renderCountry(countries) {
+  const request = new XMLHttpRequest();
 
-const request = new XMLHttpRequest(); // старый способ создания запроса на сервер (XMLHttpRequest)
-request.open("GET", "https://meowfacts.herokuapp.com/?count=3");
+  request.open("GET", `https://restcountries.com/v3.1/name/${countries}`);
+  request.send();
 
-request.send(); // отправка запроса на сервер
+  request.addEventListener("load", function () {
+    const [data] = JSON.parse(this.responseText);
+    console.log();
+    console.log(data);
+    const html = `
+    <article class="country">
+      <img class="country__img" src="${data.flags.svg}" />
+      <div class="country__data">
+      <h3 class="country__name">${data.name.common}</h3>
+      <h4 class="country__region">${data.region}</h4>
+      <p class="country__row"><span>👫</span>${data.population}</p>
+      <p class="country__row"><span>🗣️</span>${
+        Object.entries(data.languages)[0][1]
+      }</p>
+      <p class="country__row"><span>💰</span>${
+        Object.entries(Object.entries(data.currencies)[0][1])[0][1]
+      }</p>
+      </div>
+    </article>`;
 
-request.addEventListener("load", function () {
-  const data = JSON.parse(this.responseText);
-  console.log(data);
-  const [text] = data.data;
-  console.log(text);
-});
+    countriesContainer.insertAdjacentHTML("beforeend", html);
+    countriesContainer.style.opacity = 1;
+  });
+}
 
-console.log(request);
+renderCountry("usa");
+renderCountry("ukraine");
+renderCountry("spain");
