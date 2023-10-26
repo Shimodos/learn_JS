@@ -82,6 +82,11 @@ function renderCards(data, className = "") {
   countriesContainer.style.opacity = 1;
 }
 
+const renderError = (message) => {
+  countriesContainer.insertAdjacentText("beforeend", message);
+  countriesContainer.style.opacity = 1;
+};
+
 const gatRenderCountry = function (country, className = "") {
   const request = fetch(`https://restcountries.com/v3.1/name/${country}`)
     .then((response) => {
@@ -99,6 +104,16 @@ const gatRenderCountry = function (country, className = "") {
     })
     .then((data) => {
       renderCards(data[0], "neighbour");
+    })
+    .catch((err) => {
+      renderError(`Something went wrong ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
     });
 };
-gatRenderCountry("brazil");
+
+btn.addEventListener("click", function () {
+  gatRenderCountry("usa");
+});
+// gatRenderCountry("brazil");
