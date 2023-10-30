@@ -88,19 +88,75 @@ const renderError = (message) => {
 };
 
 const gatRenderCountry = function (country, className = "") {
-  const request = fetch(`https://restcountries.com/v3.1/name/${country}`)
-    .then((response) => {
+  // Обработка ошибок в промисах
+
+  //   const request = fetch(`https://restcountries.com/v3.1/name/${country}`);
+
+  //   console.log(request);
+  //   request
+  //     .then((response) => {
+  //       console.log(request);
+  //       console.log(response);
+
+  //       if (!response.ok) {
+  //         throw new Error(`Country not found ${response.status}`);
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       renderCards(data[0], className);
+  //       const neighbour = data[0].borders[0];
+  //       console.log(neighbour);
+
+  //       return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+  //     })
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error(`Country not found ${response.status}`);
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       renderCards(data[0], "neighbour");
+  //     })
+  //     .catch((err) => {
+  //       renderError(`Something went wrong ${err.message}. Try again!`);
+  //     })
+  //     .finally(() => {
+  //       countriesContainer.style.opacity = 1;
+  //     });
+  // };
+
+  // btn.addEventListener("click", function () {
+  //   gatRenderCountry("usa");
+  // });
+
+  // Обработка ошибок в асинхронных функциях
+
+  function getJSON(url, errorMsg = "Something went wrong") {
+    return fetch(url).then((response) => {
+      if (!response.ok) {
+        throw new Error(`${errorMsg} ${response.status}`);
+      }
       return response.json();
-    })
+    });
+  }
+
+  const request = fetch(`https://restcountries.com/v3.1/name/${country}`);
+
+  getJSON(`https://restcountries.com/v3.1/name/${country}`, "Country not found")
     .then((data) => {
       renderCards(data[0], className);
+      console.log(data[0]);
       const neighbour = data[0].borders[0];
       console.log(neighbour);
+      if (!neighbour) throw new Error("No neighbour found!");
 
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
-    })
-    .then((response) => {
-      return response.json();
+      // Стрна сосед
+      return getJSON(
+        `https://restcountries.com/v3.1/alpha/${neighbour}`,
+        "Country not found",
+      );
     })
     .then((data) => {
       renderCards(data[0], "neighbour");
@@ -116,4 +172,3 @@ const gatRenderCountry = function (country, className = "") {
 btn.addEventListener("click", function () {
   gatRenderCountry("usa");
 });
-// gatRenderCountry("brazil");
