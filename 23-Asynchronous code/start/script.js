@@ -216,58 +216,69 @@ navigator.geolocation.getCurrentPosition(
 
 // Промисы и асинхронность
 
-const lotteryPromise = new Promise(function (resolve, reject) {
-  setTimeout(function () {
-    if (Math.random() >= 0.5) {
-      resolve("You WIN!");
-    } else {
-      reject("You lost your money");
-    }
-  }, 2000);
-});
+// const lotteryPromise = new Promise(function (resolve, reject) {
+//   setTimeout(function () {
+//     if (Math.random() >= 0.5) {
+//       resolve("You WIN!");
+//     } else {
+//       reject("You lost your money");
+//     }
+//   }, 2000);
+// });
 
-console.log(lotteryPromise);
+// console.log(lotteryPromise);
 
-lotteryPromise
-  .then((res) => console.log(res))
-  .catch((err) => console.error(err));
+// lotteryPromise
+//   .then((res) => console.log(res))
+//   .catch((err) => console.error(err));
 
-// Промисификация
+// // Промисификация
 
-// setTimeout(() => {
-//   console.log("1 second passed");
-//   setTimeout(() => {
+// // setTimeout(() => {
+// //   console.log("1 second passed");
+// //   setTimeout(() => {
+// //     console.log("2 second passed");
+// //     setTimeout(() => {
+// //       console.log("3 second passed");
+// //     }, 1000);
+// //   }, 1000);
+// // }, 1000);
+
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
+
+// wait(5)
+//   .then(() => {
+//     console.log("1 second passed");
+//     return wait(1);
+//   })
+//   .then(() => {
 //     console.log("2 second passed");
-//     setTimeout(() => {
-//       console.log("3 second passed");
-//     }, 1000);
-//   }, 1000);
-// }, 1000);
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log("3 second passed");
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log("4 second passed");
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log("5 second passed");
+//     return wait(1);
+//   });
 
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
-  });
-};
+// Промисы и асинхронность
 
-wait(5)
-  .then(() => {
-    console.log("1 second passed");
-    return wait(1);
-  })
-  .then(() => {
-    console.log("2 second passed");
-    return wait(1);
-  })
-  .then(() => {
-    console.log("3 second passed");
-    return wait(1);
-  })
-  .then(() => {
-    console.log("4 second passed");
-    return wait(1);
-  })
-  .then(() => {
-    console.log("5 second passed");
-    return wait(1);
-  });
+console.log("Test start");
+setTimeout(() => console.log("0 sec timer"), 0);
+Promise.resolve("Resolved promise 1").then((res) => console.log(res));
+Promise.resolve("Resolved promise 2").then((res) => {
+  for (let i = 0; i < 100; i++) {}
+  console.log(res);
+});
+console.log("Test end");
