@@ -172,3 +172,102 @@ const gatRenderCountry = function (country, className = "") {
 btn.addEventListener("click", function () {
   gatRenderCountry("usa");
 });
+
+// молучение координат с помощью API Geolocation
+
+navigator.geolocation.getCurrentPosition(
+  (position) => {
+    console.log(position);
+    const { latitude: lat, longitude: lng } = position.coords;
+
+    fetch(
+      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=252249625603227513291x29043`,
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(` error ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((result) => {
+        const country = result.country;
+        // console.log(result);
+        return fetch(`https://restcountries.com/v3.1/name/${country}`);
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data[0]);
+        renderCards(data[0]);
+      })
+      .catch((err) => {
+        renderError(`Something went wrong ${err.message}. Try again!`);
+      })
+      .finally(() => {
+        countriesContainer.style.opacity = 1;
+      });
+  },
+  () => {
+    console.log(alert);
+    alert("Could not get your position");
+  },
+);
+
+// Промисы и асинхронность
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve("You WIN!");
+    } else {
+      reject("You lost your money");
+    }
+  }, 2000);
+});
+
+console.log(lotteryPromise);
+
+lotteryPromise
+  .then((res) => console.log(res))
+  .catch((err) => console.error(err));
+
+// Промисификация
+
+// setTimeout(() => {
+//   console.log("1 second passed");
+//   setTimeout(() => {
+//     console.log("2 second passed");
+//     setTimeout(() => {
+//       console.log("3 second passed");
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(5)
+  .then(() => {
+    console.log("1 second passed");
+    return wait(1);
+  })
+  .then(() => {
+    console.log("2 second passed");
+    return wait(1);
+  })
+  .then(() => {
+    console.log("3 second passed");
+    return wait(1);
+  })
+  .then(() => {
+    console.log("4 second passed");
+    return wait(1);
+  })
+  .then(() => {
+    console.log("5 second passed");
+    return wait(1);
+  });
