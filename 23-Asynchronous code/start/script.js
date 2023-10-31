@@ -214,6 +214,24 @@ navigator.geolocation.getCurrentPosition(
   },
 );
 
+// 23. Асинхронное программирование, часть 2
+
+const pos = new Promise(function (resolve, reject) {
+  navigator.geolocation.getCurrentPosition(resolve, reject);
+}).then((res) => console.log(res));
+
+// Async/Await
+
+const whereAmI = async function (country) {
+  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+  const data = await res.json();
+  console.log(res);
+  console.log(data);
+  // renderCards(data[0]);
+};
+console.log("hello");
+whereAmI("usa");
+
 // Промисы и асинхронность
 
 // const lotteryPromise = new Promise(function (resolve, reject) {
@@ -274,11 +292,11 @@ navigator.geolocation.getCurrentPosition(
 
 // Промисы и асинхронность
 
-console.log("Test start");
-setTimeout(() => console.log("0 sec timer"), 0);
-Promise.resolve("Resolved promise 1").then((res) => console.log(res));
-Promise.resolve("Resolved promise 2").then((res) => {
-  for (let i = 0; i < 100; i++) {}
-  console.log(res);
-});
-console.log("Test end");
+// console.log("Test start");
+// setTimeout(() => console.log("0 sec timer"), 0);
+// Promise.resolve("Resolved promise 1").then((res) => console.log(res));
+// Promise.resolve("Resolved promise 2").then((res) => {
+//   for (let i = 0; i < 100; i++) {}
+//   console.log(res);
+// });
+// console.log("Test end");
