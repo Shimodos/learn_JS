@@ -216,21 +216,143 @@ navigator.geolocation.getCurrentPosition(
 
 // 23. Асинхронное программирование, часть 2
 
-const pos = new Promise(function (resolve, reject) {
-  navigator.geolocation.getCurrentPosition(resolve, reject);
-}).then((res) => console.log(res));
+// const pos = new Promise(function (resolve, reject) {
+//   navigator.geolocation.getCurrentPosition(resolve, reject);
+// }).then((res) => console.log(res));
 
 // Async/Await
-
 const whereAmI = async function (country) {
-  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
-  const data = await res.json();
-  console.log(res);
-  console.log(data);
-  // renderCards(data[0]);
+  try {
+    const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+    if (!res.ok) throw new Error("Country not found");
+    const data = await res.json();
+    // console.log(res);
+    // console.log(data);
+    // renderCards(data[0]);
+    return `You are in ${data[0].name.common}`;
+  } catch (err) {
+    throw new Error(`Something went wrong ${err.message}. Try again!`);
+  }
 };
-console.log("hello");
+
+const city = whereAmI("usa");
+console.log(city);
+
+// then и catch в асинхронных функциях
+// whereAmI("usa")
+//   .then((data) => {
+//     console.log(data);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+// async/await с try/catch
+// (async function () {
+//   try {
+//     const city = await whereAmI("usa");
+//     console.log(city);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// })();
+
+async function get3Countries(c1, c2, c3) {
+  try {
+    // const response1 = await fetch(`https://restcountries.com/v3.1/name/${c1}`);
+    // const [data1] = await response1.json();
+    // console.log(data1.capital);
+    //
+    // const response2 = await fetch(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data2] = await response2.json();
+    // console.log(data2.capital);
+    //
+    // const response3 = await fetch(`https://restcountries.com/v3.1/name/${c3}`);
+    // const [data3] = await response3.json();
+    // console.log(data3.capital);
+
+    const data = await Promise.all([
+      fetch(`https://restcountries.com/v3.1/name/${c1}`).then((response) =>
+        response.json(),
+      ),
+
+      fetch(`https://restcountries.com/v3.1/name/${c2}`).then((response) =>
+        response.json(),
+      ),
+
+      fetch(`https://restcountries.com/v3.1/name/${c3}`).then((response) =>
+        response.json(),
+      ),
+    ]);
+
+    console.log(data.map((val) => val[0].capital));
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+get3Countries("usa", "ukraine", "canada");
+
+// Promise race
+
+(async function () {
+  const res = await Promise.race([
+    fetch(`https://restcountries.com/v3.1/name/usa`).then((response) =>
+      response.json(),
+    ),
+
+    fetch(`https://restcountries.com/v3.1/name/ukraine`).then((response) =>
+      response.json(),
+    ),
+
+    fetch(`https://restcountries.com/v3.1/name/canada`).then((response) =>
+      response.json(),
+    ),
+  ]);
+  console.log(res[0]);
+})();
+
+function timeout(sec) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error(`Request took too long! Timeout after ${sec} second`));
+    }, sec * 1000);
+  });
+}
+
+Promise.race([
+  fetch(`https://restcountries.com/v3.1/name/usa`).then((response) =>
+    response.json(),
+  ),
+  timeout(1),
+])
+  .then((res) => console.log(res[0].capital))
+  .catch((err) => console.log(err));
+
+// Promise.allSettled - возвращает все промисы, даже если один из них завершится с ошибкой
+Promise.allSettled([
+  Promise.resolve("Success"),
+  Promise.reject("Error"),
+  Promise.resolve("Another success"),
+]).then((res) => console.log(res));
+
+// Promise.any - возвращает первый успешный промис из множества промисов
+Promise.any([
+  Promise.resolve("Success"),
+  Promise.reject("Error"),
+  Promise.resolve("Another success"),
+]).then((res) => console.log(res));
+
+// console.log("hello");
 whereAmI("usa");
+
+// try {
+//   let x = 1;
+//   const y = 2;
+//   y = 3;
+// } catch (err) {
+//   console.log(err);
+// }
 
 // Промисы и асинхронность
 
